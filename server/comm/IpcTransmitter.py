@@ -2,8 +2,12 @@
 Ipc Transmitter Module
 """
 
-class IpcOutHandler:
+import win32api, win32pipe
+import json
 
+
+class IpcOutHandler:
+    __pipe_out__ = None                     # パイプ(内部保持)
     __is_initialize__ = False               # 初期化されたかどうか
     __is_finalize__ = False                 # 破棄されたかどうか
 
@@ -20,7 +24,13 @@ class IpcOutHandler:
             :param self: 
         """
         if(not(self.__is_initialize__) and not(self.__is_finalize__)):
-            self.__is_initialize__ = True
+            # パイプ作成
+            self.__pipe_out__ = win32pipe.CreateNamedPipe(r'\\.\pipe\biassys_pipein', win32pipe.PIPE_ACCESS_OUTBOUND, win32pipe.PIPE_WAIT | win32pipe.PIPE_TYPE_BYTE, 1, 4096, 0, 10000, None)
+            
+            
+            if self.__pipe_out__ != None:
+                if win32pipe.ConnectNamedPipe(self.__pipe_out__) == 0:            # パイプ接続確認
+                    self.__is_initialize__ = True
 
     def Finalize(self):
         """
@@ -28,7 +38,12 @@ class IpcOutHandler:
             :param self: 
         """
         if self.__is_initialize__ and not(self.__is_finalize__):
-            self.__is_finalize__ = True
+            if self.__pipe_out__ != None:
+                # パイプ閉じる
+                win32pipe.DisconnectNamedPipe(self.__pipe_out__)
+                self.__pipe_out__.close()             
+                
+                self.__is_finalize__ = True
 
     def IsInitialized(self):
         """
@@ -48,4 +63,8 @@ class IpcOutHandler:
         sendres = 0
         return 0
 
+
+
+if __name__ == '__main__':
+    print("Hello")
 
