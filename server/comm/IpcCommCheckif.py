@@ -1,6 +1,5 @@
-
-import IpcTransmitter
-import IpcComm
+from . import IpcTransmitter
+from . import IpcComm
 import json
 
 
@@ -8,7 +7,8 @@ class IpcCommCheckif(IpcComm.IpcComm):
     """
     インタフェースチェックコマンドを表します。
     """
-    __json_req_key_text__           = "text"
+
+    __json_req_key_text__ = "text"
 
     def __init__(self, transmit_handler):
         """
@@ -42,9 +42,10 @@ class IpcCommCheckif(IpcComm.IpcComm):
                                     "message" : super().__list_errormsg__[retval], 
                                     "text" : textval})
         print(jsonresparam)
-
+        
         if( self.__transmit_handler__.IsInitialized() == True):
             print("Initialize")
+            self.__SendReply__(jsonresparam)
 
         return 0
 
