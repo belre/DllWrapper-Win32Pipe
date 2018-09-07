@@ -2,7 +2,7 @@
 Ipc Transmitter Module
 """
 
-import win32api, win32pipe
+import win32api, win32pipe, win32file
 import json
 
 
@@ -10,6 +10,8 @@ class IpcOutHandler:
     __pipe_out__ = None                     # パイプ(内部保持)
     __is_initialize__ = False               # 初期化されたかどうか
     __is_finalize__ = False                 # 破棄されたかどうか
+
+    __seqno_counter__ = 0                   # seqNo用のカウンタ
 
     def __init__(self):
         """ コンストラクタです。
@@ -59,8 +61,13 @@ class IpcOutHandler:
         """   
         return self.__is_finalize__
 
-    def SendByBlocking(self, jsonmsg):
-        sendres = 0
+    def SendByBlocking(self, commname, commtype, commparam):
+        # メッセージ生成
+        jsonmsg = json.dumps({'command':commname, 'seqNo': self.__seqno_counter__, 'type': commtype, 'param' : commparam}, ensure_ascii=False)
+        self.__seqno_counter__ = self.__seqno_counter__ + 1
+
+        # データ書込み処理
+        recvjsonmsg = win32file.WriteFile(self.__pipe_out__, jsonmsg.encode('utf-8'))
         return 0
 
 

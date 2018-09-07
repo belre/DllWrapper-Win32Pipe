@@ -1,9 +1,9 @@
 """
 Ipc Receiver Module
 """
-import win32api, win32pipe
+import win32api, win32pipe, win32file
 import json
-
+import binascii
 
 class IpcInCallbackHandler:
     __pipe_in__ = None                  # パイプ(内部保持)
@@ -60,20 +60,34 @@ class IpcInCallbackHandler:
         """   
         return self.__is_finalize__
 
-    def RecvByBlocking(self, jsonmsg):
+    def RecvByBlocking(self):
         """
         データを受信します。
             :param self: 
-            :param jsonmsg: 
+            :param jsonmsg:
+
+            :return: 次の動作状態。>0ならばパイプ処理は終了します。 
         """   
-        execstate = 0
-        return execstate
+        
+        # データ受取処理
+        recvjsonmsg = win32file.ReadFile(self.__pipe_in__, 4096)[1].decode('utf-8')
+
+        # jsonへの変換
+        recvmsg = json.loads(recvjsonmsg)
+
+        # 命令が存在するかどうかを確認
+        nextstate = 0
+        if recvmsg['command'] in self.__comm_list__:
+            # 命令実行
+            nextstate = self.__comm_list__[recvmsg['command']].Execute(recvmsg['command'], recvmsg['param'])
+
+        return nextstate
 
     
 
 
 if __name__ == '__main__':
-    rec1 = IpcInCallbackHandler()
+    rec1 = IpcInCallbackHandler(None)
     rec1.Initialize()
 
     rec2 = rec1
