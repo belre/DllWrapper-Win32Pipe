@@ -27,7 +27,7 @@ class IpcInCallbackHandler:
         """
         if(not(self.__is_initialize__) and not(self.__is_finalize__)):
             # パイプ作成
-            self.__pipe_in__ = win32pipe.CreateNamedPipe(r'\\.\pipe\biassys_pipeout', win32pipe.PIPE_ACCESS_INBOUND, win32pipe.PIPE_WAIT | win32pipe.PIPE_TYPE_BYTE, 1, 4096, 0, 10000, None)
+            self.__pipe_in__ = win32pipe.CreateNamedPipe(r'\\.\pipe\biassys_pipeout', win32pipe.PIPE_ACCESS_INBOUND, win32pipe.PIPE_WAIT | win32pipe.PIPE_TYPE_BYTE, 1, 65536, 0, 10000, None)
             
             if self.__pipe_in__ != None:
                 if win32pipe.ConnectNamedPipe(self.__pipe_in__) == 0:            # パイプ接続確認

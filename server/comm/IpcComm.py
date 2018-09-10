@@ -52,7 +52,8 @@ class IpcComm:
         # 常に上位クラスがコマンド名を送れるようにする。
         self.__command_name__ = commname
 
-        nextstate = self.__ReplyToRequest__(reqparam)
+        execret = self.__ExecuteProcedures__(reqparam)
+        nextstate = self.__ReplyToRequest__(reqparam, execret)
         
         """
         # JSON文字列の状態を決定する。
@@ -71,7 +72,7 @@ class IpcComm:
     def __ExecuteProcedures__(self, jsonreqparam):
         return 0
 
-    def __ReplyToRequest__(self, jsonreqparam):
+    def __ReplyToRequest__(self, jsonreqparam, execret):
         return 0
 
     def __SendReply__(self, commparam):
