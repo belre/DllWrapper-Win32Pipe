@@ -34,7 +34,7 @@ class IpcComm:
         self.__transmit_handler__ = transmit_handler
 
 
-    def Execute(self, commname, jsonreqparam):
+    def Execute(self, commname, jsonreqparam, beforestate):
         """
         jsonmsgに従ってコマンドを実行します。
             :param self: 
@@ -52,8 +52,8 @@ class IpcComm:
         # 常に上位クラスがコマンド名を送れるようにする。
         self.__command_name__ = commname
 
-        execret = self.__ExecuteProcedures__(reqparam)
-        nextstate = self.__ReplyToRequest__(reqparam, execret)
+        execret = self.__ExecuteProcedures__(reqparam, beforestate)
+        nextstate = self.__ReplyToRequest__(reqparam, execret, beforestate)
         
         """
         # JSON文字列の状態を決定する。
@@ -69,11 +69,11 @@ class IpcComm:
         """
         return nextstate
     
-    def __ExecuteProcedures__(self, jsonreqparam):
+    def __ExecuteProcedures__(self, jsonreqparam, beforestate):
         return 0
 
-    def __ReplyToRequest__(self, jsonreqparam, execret):
-        return 0
+    def __ReplyToRequest__(self, jsonreqparam, execret, beforestate):
+        return NextStateIpc()
 
     def __SendReply__(self, commparam):
         return self.__transmit_handler__.SendByBlocking(self.__command_name__, "reply", commparam)
@@ -81,6 +81,29 @@ class IpcComm:
 
     def __SendNotify__(self, commparam):
         return self.__transmit_handler__.SendByBlocking(self.__command_name__, "notify", commparam)
+
+
+class NextStateIpc:
+    """
+    プロセス間通信における次状態を表します。
+    """
+    ipc_disposeflag = 0
+    ipc_nextstateparam = {}
+    
+    def __init__ (self):
+        self.ipc_disposeflag = 0
+        self.ipc_nextstateparam = {}
+
+
+
+
+
+
+
+
+
+
+
 
 
 

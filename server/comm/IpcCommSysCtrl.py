@@ -20,7 +20,7 @@ class IpcCommCheckif(IpcComm.IpcComm):
         """
         super().__init__(transmit_handler)
 
-    def __ReplyToRequest__(self, reqparam, execret):
+    def __ReplyToRequest__(self, reqparam, execret, beforestate):
         """
         レスポンスとして返却します。
             :param self: 
@@ -47,7 +47,7 @@ class IpcCommCheckif(IpcComm.IpcComm):
             print("Initialize")
             self.__SendReply__(jsonresparam)
 
-        return 0
+        return beforestate
 
 
 class IpcCommExit(IpcComm.IpcComm):
@@ -65,7 +65,7 @@ class IpcCommExit(IpcComm.IpcComm):
         """
         super().__init__(transmit_handler)
 
-    def __ReplyToRequest__(self, reqparam, execret):
+    def __ReplyToRequest__(self, reqparam, execret, beforestate):
         """
         レスポンスとして返却します。
             :param self: 
@@ -82,7 +82,10 @@ class IpcCommExit(IpcComm.IpcComm):
         if( self.__transmit_handler__.IsInitialized() == True):
             self.__SendReply__(jsonresparam)
 
-        return 100
+        nextstate = IpcComm.NextStateIpc()
+        nextstate.ipc_disposeflag = 100
+
+        return nextstate
 
 
 

@@ -60,7 +60,7 @@ class IpcInCallbackHandler:
         """   
         return self.__is_finalize__
 
-    def RecvByBlocking(self):
+    def RecvByBlocking(self, beforestate):
         """
         データを受信します。
             :param self: 
@@ -79,7 +79,7 @@ class IpcInCallbackHandler:
         nextstate = 0
         if recvmsg['command'] in self.__comm_list__:
             # 命令実行
-            nextstate = self.__comm_list__[recvmsg['command']].Execute(recvmsg['command'], recvmsg['param'])
+            nextstate = self.__comm_list__[recvmsg['command']].Execute(recvmsg['command'], recvmsg['param'], beforestate)
 
         return nextstate
 

@@ -1,5 +1,6 @@
 import comm
 import comm.private
+
 from time import sleep
 
 ### コマンド-レスポンス構造定義 ###
@@ -27,8 +28,9 @@ if outhandle.IsInitialized():
 else:
     print("Initialization failed.")
 
-
-while inhandle.RecvByBlocking() <= 0:
+nextstate = comm.IpcComm.NextStateIpc()
+while nextstate.ipc_disposeflag <= 0:
+    nextstate = inhandle.RecvByBlocking(nextstate)
     print("Executed RecvBlocking")
 
 print("Exit")
