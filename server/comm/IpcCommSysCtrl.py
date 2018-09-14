@@ -20,7 +20,7 @@ class IpcCommCheckif(IpcComm.IpcComm):
         """
         super().__init__(transmit_handler)
 
-    def __ReplyToRequest__(self, reqparam, execret, beforestate):
+    def __ReplyToRequest__(self, reqparam, execret, state):
         """
         レスポンスとして返却します。
             :param self: 
@@ -40,14 +40,14 @@ class IpcCommCheckif(IpcComm.IpcComm):
         # レスポンス用の文字列を発行
         jsonresparam = json.dumps({ "ret" : retval, 
                                     "message" : super().__list_errormsg__[retval], 
-                                    "text" : textval})
+                                    "text" : textval}, ensure_ascii=False)
         print(jsonresparam)
         
         if( self.__transmit_handler__.IsInitialized() == True):
             print("Initialize")
             self.__SendReply__(jsonresparam)
 
-        return beforestate
+        return 0
 
 
 class IpcCommExit(IpcComm.IpcComm):
@@ -65,7 +65,7 @@ class IpcCommExit(IpcComm.IpcComm):
         """
         super().__init__(transmit_handler)
 
-    def __ReplyToRequest__(self, reqparam, execret, beforestate):
+    def __ReplyToRequest__(self, reqparam, execret, state):
         """
         レスポンスとして返却します。
             :param self: 
@@ -76,16 +76,13 @@ class IpcCommExit(IpcComm.IpcComm):
         retval = 0
         jsonresparam = json.dumps({ "ret" : retval, 
                                     "message" : super().__list_errormsg__[retval]
-                                    })
+                                    }, ensure_ascii=False)
         print(jsonresparam)
         
         if( self.__transmit_handler__.IsInitialized() == True):
             self.__SendReply__(jsonresparam)
 
-        nextstate = IpcComm.NextStateIpc()
-        nextstate.ipc_disposeflag = 100
-
-        return nextstate
+        return 100      
 
 
 

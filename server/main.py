@@ -28,9 +28,9 @@ if outhandle.IsInitialized():
 else:
     print("Initialization failed.")
 
-nextstate = comm.IpcComm.NextStateIpc()
-while nextstate.ipc_disposeflag <= 0:
-    nextstate = inhandle.RecvByBlocking(nextstate)
+
+state = comm.IpcComm.IpcState()
+while inhandle.RecvByBlocking(state) <= 0:
     print("Executed RecvBlocking")
 
 print("Exit")
@@ -38,8 +38,5 @@ print("Exit")
 ### ハンドラ破棄 ###
 inhandle.Finalize()
 outhandle.Finalize()
-
-
-
 
 

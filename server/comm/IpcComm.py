@@ -34,7 +34,7 @@ class IpcComm:
         self.__transmit_handler__ = transmit_handler
 
 
-    def Execute(self, commname, jsonreqparam, beforestate):
+    def Execute(self, commname, jsonreqparam, state):
         """
         jsonmsgに従ってコマンドを実行します。
             :param self: 
@@ -52,28 +52,16 @@ class IpcComm:
         # 常に上位クラスがコマンド名を送れるようにする。
         self.__command_name__ = commname
 
-        execret = self.__ExecuteProcedures__(reqparam, beforestate)
-        nextstate = self.__ReplyToRequest__(reqparam, execret, beforestate)
+        execret = self.__ExecuteProcedures__(reqparam, state)
+        execrep = self.__ReplyToRequest__(reqparam, execret, state)
         
-        """
-        # JSON文字列の状態を決定する。
-        nextstate = 0
-        if reqmsg == None:
-            nextstate = 1
-        elif self.__json_req_key_seqNo__ not in reqmsg or self.__json_req_key_command__ not in reqmsg or self.__json_req_key_param__ not in reqmsg:
-            nextstate = 1
-        elif reqmsg[self.__json_req_key_seqNo__] == None or reqmsg[self.__json_req_key_command__] == None:
-            nextstate = 1
-        else:
-            nextstate = self.__ReplyToRequest__(reqmsg[self.__json_req_key_param__])
-        """
-        return nextstate
+        return execrep
     
-    def __ExecuteProcedures__(self, jsonreqparam, beforestate):
+    def __ExecuteProcedures__(self, jsonreqparam, state):
         return 0
 
-    def __ReplyToRequest__(self, jsonreqparam, execret, beforestate):
-        return NextStateIpc()
+    def __ReplyToRequest__(self, jsonreqparam, execret, state):
+        return 0
 
     def __SendReply__(self, commparam):
         return self.__transmit_handler__.SendByBlocking(self.__command_name__, "reply", commparam)
@@ -83,28 +71,13 @@ class IpcComm:
         return self.__transmit_handler__.SendByBlocking(self.__command_name__, "notify", commparam)
 
 
-class NextStateIpc:
+
+class IpcState:
     """
     プロセス間通信における次状態を表します。
     """
-    ipc_disposeflag = 0
     ipc_nextstateparam = {}
     
     def __init__ (self):
-        self.ipc_disposeflag = 0
         self.ipc_nextstateparam = {}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
