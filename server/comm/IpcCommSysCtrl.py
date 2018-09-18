@@ -1,5 +1,7 @@
-from . import IpcTransmitter
-from . import IpcComm
+#from . import IpcTransmitter
+#from . import IpcComm
+
+import IpcComm
 import json
 
 
@@ -41,10 +43,9 @@ class IpcCommCheckif(IpcComm.IpcComm):
         jsonresparam = json.dumps({ "ret" : retval, 
                                     "message" : super().__list_errormsg__[retval], 
                                     "text" : textval}, ensure_ascii=False)
-        print(jsonresparam)
+        #print(jsonresparam)
         
         if( self.__transmit_handler__.IsInitialized() == True):
-            print("Initialize")
             self.__SendReply__(jsonresparam)
 
         return 0
@@ -77,7 +78,6 @@ class IpcCommExit(IpcComm.IpcComm):
         jsonresparam = json.dumps({ "ret" : retval, 
                                     "message" : super().__list_errormsg__[retval]
                                     }, ensure_ascii=False)
-        print(jsonresparam)
         
         if( self.__transmit_handler__.IsInitialized() == True):
             self.__SendReply__(jsonresparam)
@@ -88,20 +88,3 @@ class IpcCommExit(IpcComm.IpcComm):
 
 
 
-
-
-#print(json.dumps( { "seqNo" :0 , "command" : "checkif", "param" : {"ret":3, "message":"", "text" : "Hello World"}}))
-
-if __name__ == '__main__':
-    transmit_handler = IpcTransmitter.IpcOutHandler()
-
-    val = IpcCommCheckif(transmit_handler)
-    print(val.Execute(r'{"seqNo": 0, "command": "checkif", "param": {"ret": 3, "message": "", "text": "Hello World"}}'))
-    print(val.Execute(r'{"seqNo": 0, "command": "checkif", "param": {"ret": 3, "message": "", "textd": "Hello World"}}'))
-    print(val.Execute(r'{"seqNo": 0, "command": "checkif", "param": null}'))
-    print(val.Execute(r'abcdefg'))
-
-    transmit_handler.Initialize()
-    print(val.Execute(r'{"seqNo": 0, "command": "checkif", "param": {"ret": 3, "message": "", "text": "Hello World"}}'))
-
-#

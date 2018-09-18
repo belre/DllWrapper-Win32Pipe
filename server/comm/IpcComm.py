@@ -1,16 +1,19 @@
 """
 IPCComm Module
 """
-from . import IpcTransmitter
+#import IpcTransmitter
 import json
 
-class IpcComm:
+class IpcComm():
     """
     プロセス間通信用の一般化コマンドクラスを表す。
     """
 
     # 現在取得したコマンドの情報。
     __command_name__ = None
+
+    # 現在取得したコマンドのseqNo。
+    __seqNo__ = -1
 
     # 送信用のパイプハンドラ
     __transmit__handler = None
@@ -34,23 +37,41 @@ class IpcComm:
         self.__transmit_handler__ = transmit_handler
 
 
-    def Execute(self, commname, jsonreqparam, state):
+    def Execute(self, commname, seqno, jsonreqparam, state):
         """
         jsonmsgに従ってコマンドを実行します。
             :param self: 
             :param jsonmsg: クライアントから到達したJSONメッセージ
+
+
         """ 
 
+        # エラーチェック
+        if commname == None or seqno < 0 or jsonreqparam == None:
+            return -1
+        elif state == None:
+            return -3
+
         # JSONを読み込む。
+        reqparam = None
         try:
-            reqparam = json.loads(jsonreqparam)
+            # パラメータなし時はそのまま通す
+            if(jsonreqparam == ""):
+                pass
+            else:
+                # それ以外の場合はjsonに変換
+                reqparam = json.loads(jsonreqparam)
         except json.decoder.JSONDecodeError:
             reqparam = None
+            return -2
+
+
 
         # 現在のコマンド名を確保する。
         # 非通知命令等で受信に対して送信するパケットが1対1ではないので、
         # 常に上位クラスがコマンド名を送れるようにする。
         self.__command_name__ = commname
+        self.__seqNo__ = seqno
 
         execret = self.__ExecuteProcedures__(reqparam, state)
         execrep = self.__ReplyToRequest__(reqparam, execret, state)
@@ -58,21 +79,21 @@ class IpcComm:
         return execrep
     
     def __ExecuteProcedures__(self, jsonreqparam, state):
-        return 0
+        return 0            # ここの戻り値変更が必要
 
     def __ReplyToRequest__(self, jsonreqparam, execret, state):
-        return 0
+        return 0            # ここの戻り値変更が必要
 
     def __SendReply__(self, commparam):
-        return self.__transmit_handler__.SendByBlocking(self.__command_name__, "reply", commparam)
+        return self.__transmit_handler__.SendByBlocking(self.__command_name__, self.__seqNo__, "reply", commparam)
 
 
     def __SendNotify__(self, commparam):
-        return self.__transmit_handler__.SendByBlocking(self.__command_name__, "notify", commparam)
+        return self.__transmit_handler__.SendByBlocking(self.__command_name__, -1, "notify", commparam)
 
 
 
-class IpcState:
+class IpcState():
     """
     プロセス間通信における次状態を表します。
     """

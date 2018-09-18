@@ -19,21 +19,28 @@ inhandle = comm.IpcReceiver.IpcInCallbackHandler(comm_list)
 outhandle.Initialize()
 
 if outhandle.IsInitialized():
-    print("outhandle Initialized")
+    #print("outhandle Initialized")
+    pass
     inhandle.Initialize()
     if inhandle.IsInitialized():
-        print("Very good")
+        #print("Very good")
+        pass
     else:
-        print("Finalization failed.")
+        #print("Finalization failed.")
+        pass
 else:
-    print("Initialization failed.")
+    pass
+    #print("Initialization failed.")
 
 
 state = comm.IpcComm.IpcState()
 while inhandle.RecvByBlocking(state) <= 0:
-    print("Executed RecvBlocking")
+    pass
+    #print("Executed RecvBlocking")
 
-print("Exit")
+#print("Exit")
+
+sleep(3)
 
 ### ハンドラ破棄 ###
 inhandle.Finalize()

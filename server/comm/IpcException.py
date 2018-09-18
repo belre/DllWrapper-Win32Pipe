@@ -1,0 +1,4 @@
+
+class IpcCommInvalidException(Exception):
+    pass
+
