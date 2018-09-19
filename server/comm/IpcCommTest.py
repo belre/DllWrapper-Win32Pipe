@@ -1,5 +1,5 @@
 #from . import IpcTransmitter
-import IpcComm
+from comm import IpcComm
 import json
 
 

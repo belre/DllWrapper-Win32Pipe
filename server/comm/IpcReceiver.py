@@ -5,7 +5,7 @@ import win32api, win32pipe, win32file, pywintypes
 import json
 import binascii
 
-import IpcException
+from comm import IpcException
 
 class IpcInCallbackHandler:
     __pipe_in__ = None                  # パイプ(内部保持)

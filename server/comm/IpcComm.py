@@ -2,7 +2,10 @@
 IPCComm Module
 """
 #import IpcTransmitter
+from comm import IpcTransmitter
+
 import json
+
 
 class IpcComm():
     """
@@ -22,7 +25,9 @@ class IpcComm():
     __list_errormsg__ = {   
         0:"", 
         100: "Parameter is null.",
-        101: "Request parameter is invalid."
+        101: "Request parameter is invalid.",
+        103: "File is not found.",
+        104: "Json parameter is invalid."
     }
 
 
@@ -64,8 +69,6 @@ class IpcComm():
         except json.decoder.JSONDecodeError:
             reqparam = None
             return -2
-
-
 
         # 現在のコマンド名を確保する。
         # 非通知命令等で受信に対して送信するパケットが1対1ではないので、

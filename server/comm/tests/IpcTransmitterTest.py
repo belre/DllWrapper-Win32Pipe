@@ -1,6 +1,9 @@
 
 import unittest
-import IpcTransmitter
+
+from comm import IpcTransmitter
+
+
 from time import sleep
 
 
@@ -41,7 +44,7 @@ class IpcOutHandlerTest(unittest.TestCase):
         assert(trans_obj.IsInitialized()==True)
         assert(trans_obj.IsFinalized()==False)
         
-
+        sleep(2)
         ### No.2-3 二重初期化 ###
         print("2-3")        
         assert(trans_obj.Initialize()==False)

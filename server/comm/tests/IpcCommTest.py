@@ -1,7 +1,7 @@
 import unittest
 
-import IpcComm
-import IpcTransmitter
+from comm import IpcComm
+from comm import IpcTransmitter
 
 import json
 

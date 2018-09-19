@@ -1,7 +1,10 @@
 #from . import IpcTransmitter
 #from . import IpcComm
 
-import IpcComm
+from comm import IpcTransmitter
+from comm import IpcComm
+
+
 import json
 
 

@@ -1,12 +1,21 @@
 import win32api, win32pipe, win32file
+import win32con
 
+import binascii
 
-__pipe_in__ = win32pipe.CreateNamedPipe(r'\\.\pipe\biassys_pipein', win32pipe.PIPE_ACCESS_INBOUND, win32pipe.PIPE_WAIT | win32pipe.PIPE_TYPE_BYTE, 1, 65536, 0, 10000, None)
-win32pipe.ConnectNamedPipe(__pipe_in__)
+from time import sleep
 
+#try:
 
-win32pipe.DisconnectNamedPipe(__pipe_in__)
+__pipe_in__ = win32file.CreateFile(r'\\.\pipe\biassys_pipein', win32con.GENERIC_READ, 0, None, win32con.OPEN_EXISTING, win32con.FILE_FLAG_OVERLAPPED, None)
+#win32pipe.SetNamedPipeHandleState(__pipe_in__, win32pipe.PIPE_READMODE_MESSAGE, 65536, None)
+
+#tmp = []
+tmp = win32file.ReadFile(__pipe_in__, 4096  )[1].decode('utf-8')
+#buffer = win32file.AllocateReadBuffer(4096)
+
+sleep(5)
+
 __pipe_in__.close()
 
-
-
+print(tmp)

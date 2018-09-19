@@ -1,8 +1,11 @@
 import unittest
-import IpcReceiver
-import IpcException
-import IpcComm
-import IpcCommTest
+
+
+
+from comm import IpcReceiver
+from comm import IpcException
+from comm import IpcComm
+from comm import IpcCommTest
 
 from time import sleep
 
